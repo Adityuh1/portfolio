@@ -1,27 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #fafafa;
+  --color-paper-sunk: #f4f3ef;
+  --color-paper-raised: #ffffff;
+  --color-ink: #171717;
+  --color-ink-2: #525252;
+  --color-ink-3: #8a857d;
+  --color-rule: rgba(23, 23, 23, 0.12);
+  --color-rule-dash: rgba(23, 23, 23, 0.08);
+  --color-rule-solid: rgba(23, 23, 23, 0.06);
+  --color-live: #22c55e;
+  --color-danger: #ef4444;
+  --color-logo-ground: #ecebe6;
+  --rail-w: 32px;
+  --frame-max: 1100px;
+  --font-mono: 'Courier Prime', Courier, monospace;
+  --font-deva: 'Noto Serif Devanagari', serif;
+  --ease-board: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-hover: 0.15s;
+  --dur-state: 0.25s;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --color-paper: #12110f;
+  --color-paper-sunk: #1b1917;
+  --color-paper-raised: #221f1c;
+  --color-ink: #f0ede6;
+  --color-ink-2: #ada69a;
+  --color-ink-3: #6e675c;
+  --color-rule: rgba(240, 237, 230, 0.16);
+  --color-rule-dash: rgba(240, 237, 230, 0.11);
+  --color-rule-solid: rgba(240, 237, 230, 0.09);
+  --color-live: #57c97f;
+  --color-danger: #e8897f;
+  --color-logo-ground: #262320;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-mono);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Custom Typography */
+.t-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
+.t-display {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+}
+
+.t-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.t-prose {
+  font-family: var(--font-mono);
+  line-height: 1.65;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rule borders */
+.rule-t {
+  border-top: 1px solid var(--color-rule);
+}
+.rule-b {
+  border-bottom: 1px solid var(--color-rule);
+}
+.rule-l {
+  border-left: 1px solid var(--color-rule);
+}
+.rule-r {
+  border-right: 1px solid var(--color-rule);
+}
+
+/* Hatch pattern */
+.hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-rule-solid) 0,
+    var(--color-rule-solid) 1px,
+    transparent 0,
+    transparent 8px
+  );
+}
+
+/* Live green status pulse */
+.dot-live {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-live);
+  box-shadow: 0 0 8px var(--color-live);
+  animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
   }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+/* Character hover stagger effect */
+.stagger-ch {
+  display: inline-block;
+  transition: transform 0.2s var(--ease-board), color 0.2s var(--ease-board);
+}
+.stagger-ch:hover {
+  transform: translateY(-2px);
+  color: var(--color-ink);
+}
+
+/* Reading bar animation */
+.read-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-ink);
+  width: 0%;
+  transition: width 0.1s linear;
+  z-index: 50;
+}
+
+/* Name animation on hero */
+.name-draw {
+  position: relative;
+  display: inline-block;
+}
+
+/* Hang indentation */
+.hang {
+  position: relative;
+}
+
+/* Max content wrapper */
+.frame-wide {
+  max-width: var(--frame-max);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-rule);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-3);
 }
